@@ -17,15 +17,21 @@ for iter = 1:num_iters
     %       of the cost function (computeCostMulti) and gradient here.
     %
 
-
-
-
-
-
-
-
-
-
+    %calculate h_theta(x)
+    hx = X * theta; 
+    
+    %calculate new theta values, using old values
+    theta_new(1) = theta(1) - (alpha/m) * sum(hx - y);
+    for i = 2:length(theta)
+        theta_new(i) = theta(i) - (alpha/m) * sum((hx - y).*X(:,i)); 
+    end
+    
+    %calculate J(theta)
+    hx_new = X * theta_new';
+    J = (1/2) * (1/m) * sum((hx_new - y).^2);
+    
+    %update theta
+    theta = theta_new';
 
     % ============================================================
 
