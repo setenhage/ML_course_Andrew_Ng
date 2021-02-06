@@ -67,6 +67,9 @@ hx = sigmoid(alpha2 * Theta2');
 J = -(1/m) *  sum(sum(yc' .* log(hx) + (ones(size(yc)) - yc)' .* ...
     log(ones(size(yc))' - hx),2));
 
+%comput cost regularized
+J = J + (lambda/(2*m)) * (sum(sum(Theta1(:,2:end).^2)) + ...
+    sum(sum((Theta2(:,2:end).^2))));
 
 % Part 2: Implement the backpropagation algorithm to compute the gradients
 %         Theta1_grad and Theta2_grad. You should return the partial derivatives of
