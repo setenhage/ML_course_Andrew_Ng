@@ -38,7 +38,36 @@ Theta2_grad = zeros(size(Theta2));
 %         variable J. After implementing Part 1, you can verify that your
 %         cost function computation is correct by verifying the cost
 %         computed in ex4.m
-%
+
+%reshape y
+nc = size(Theta2,1); %number of categories
+
+%initialize categorzied y matrix
+yc = zeros(nc, length(y));
+for i = 1:length(y)
+   yc(y(i), i) = 1; 
+end
+
+%add bias term to X
+bias = ones(size(X, 1), 1);
+Xb = [bias X]; 
+
+%Calculate h(x)
+hx = zeros(size(yc))';
+
+%forward propagations
+alpha2 = [ones(size(Xb, 1), 1) sigmoid(Xb * Theta1')];
+hx = sigmoid(alpha2 * Theta2');
+% [~,index] = max(alpha3, [], 2);
+% for i = 1:length(hx)
+%     hx(i, index(i)) = 1; 
+% end
+
+%compute cost
+J = -(1/m) *  sum(sum(yc' .* log(hx) + (ones(size(yc)) - yc)' .* ...
+    log(ones(size(yc))' - hx),2));
+
+
 % Part 2: Implement the backpropagation algorithm to compute the gradients
 %         Theta1_grad and Theta2_grad. You should return the partial derivatives of
 %         the cost function with respect to Theta1 and Theta2 in Theta1_grad and
@@ -61,21 +90,6 @@ Theta2_grad = zeros(size(Theta2));
 %               the regularization separately and then add them to Theta1_grad
 %               and Theta2_grad from Part 2.
 %
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
