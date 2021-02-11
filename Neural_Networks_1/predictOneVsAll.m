@@ -30,11 +30,9 @@ X = [ones(m, 1) X];
 %       for each row.
 %       
 
-
-
-
-
-
+%Calculate Htheta(x)
+hx = sigmoid(X * all_theta');
+[~, p] = max(hx, [], 2); 
 
 % =========================================================================
 
