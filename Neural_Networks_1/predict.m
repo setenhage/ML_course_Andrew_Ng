@@ -21,13 +21,15 @@ p = zeros(size(X, 1), 1);
 %       can use max(A, [], 2) to obtain the max for each row.
 %
 
+%add bias to X 
+X = [ones(m, 1) X];
 
+%forward propagation
+alpha1 = [ones(m, 1) sigmoid(X * Theta1')];
+hx = sigmoid(alpha1 * Theta2');
 
-
-
-
-
-
+%predict
+[~, p] = max(hx, [], 2);
 
 % =========================================================================
 
