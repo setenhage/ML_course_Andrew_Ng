@@ -58,10 +58,6 @@ hx = zeros(size(yc))';
 %forward propagations
 alpha2 = [ones(size(Xb, 1), 1) sigmoid(Xb * Theta1')];
 hx = sigmoid(alpha2 * Theta2');
-% [~,index] = max(alpha3, [], 2);
-% for i = 1:length(hx)
-%     hx(i, index(i)) = 1; 
-% end
 
 %compute cost
 J = -(1/m) *  sum(sum(yc' .* log(hx) + (ones(size(yc)) - yc)' .* ...
