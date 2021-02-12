@@ -43,9 +43,9 @@ Theta2_grad = zeros(size(Theta2));
 nc = size(Theta2,1); %number of categories
 
 %initialize categorzied y matrix
-yc = zeros(nc, length(y));
+mapped_y = zeros(nc, length(y));
 for i = 1:length(y)
-   yc(y(i), i) = 1; 
+   mapped_y(y(i), i) = 1; 
 end
 
 %add bias term to X
@@ -53,17 +53,17 @@ bias = ones(size(X, 1), 1);
 Xb = [bias X]; 
 
 %Calculate h(x)
-hx = zeros(size(yc))';
+hx = zeros(size(mapped_y))';
 
 %forward propagations
 alpha2 = [ones(size(Xb, 1), 1) sigmoid(Xb * Theta1')];
 hx = sigmoid(alpha2 * Theta2');
 
 %compute cost
-J = -(1/m) *  sum(sum(yc' .* log(hx) + (ones(size(yc)) - yc)' .* ...
-    log(ones(size(yc))' - hx),2));
+J = -(1/m) *  sum(sum(mapped_y' .* log(hx) + (ones(size(mapped_y)) - mapped_y)' .* ...
+    log(ones(size(mapped_y))' - hx),2));
 
-%comput cost regularized
+% %compute cost regularized
 J = J + (lambda/(2*m)) * (sum(sum(Theta1(:,2:end).^2)) + ...
     sum(sum((Theta2(:,2:end).^2))));
 
@@ -82,6 +82,29 @@ J = J + (lambda/(2*m)) * (sum(sum(Theta1(:,2:end).^2)) + ...
 %               over the training examples if you are implementing it for the 
 %               first time.
 %
+
+reg1 = zeros(size(Theta1));
+reg2 = zeros(size(Theta2));
+
+
+for it = 1:m %iterate over training examples
+    
+    %forward propagation
+    alpha_one = Xb(it,:);
+    alpha_two = [1 sigmoid(alpha_one * Theta1')];
+    alpha_three = sigmoid(alpha_two * Theta2');
+    
+    %calculate gradients
+    delta_three = alpha_three - mapped_y(:,it)';
+    Theta2_grad = Theta2_grad + delta_three' * alpha_two;
+    
+    z2 = alpha_one*Theta1';
+    delta_two = (delta_three * Theta2(:, 2:end)) .* sigmoidGradient(z2);
+    Theta1_grad = Theta1_grad + (alpha_one' * delta_two)';
+    
+end
+
+
 % Part 3: Implement regularization with the cost function and gradients.
 %
 %         Hint: You can implement this around the code for
@@ -89,8 +112,15 @@ J = J + (lambda/(2*m)) * (sum(sum(Theta1(:,2:end).^2)) + ...
 %               the regularization separately and then add them to Theta1_grad
 %               and Theta2_grad from Part 2.
 %
+% 
+reg1 = Theta1;
+reg2 = Theta2; 
 
+reg1(:,1) = 0;
+reg2(:,1) = 0;
 
+Theta1_grad = (Theta1_grad + lambda .* reg1) ./ m;
+Theta2_grad = (Theta2_grad + lambda .* reg2) ./ m; 
 
 
 % -------------------------------------------------------------
