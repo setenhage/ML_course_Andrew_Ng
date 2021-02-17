@@ -25,14 +25,17 @@ hx = X * theta;
 %compute the J(theta)
 J = (1/(2*m)) * sum((hx - y).^2) + (lambda/(2*m)) * sum(theta(2:end).^2);
 
+%intialize regularization vector 
+reg = zeros(size(theta));
 
-
-
-
-
-
-
-
+%compute gradients
+for i = 1:length(theta)
+    grad(i) = (1/m) * sum((hx - y)' * X(:,i));
+    reg(i) = (lambda/m) * theta(i);
+end
+%Don't regularize the bias weight. 
+reg(1) = 0;
+grad = grad + reg; 
 
 % =========================================================================
 
